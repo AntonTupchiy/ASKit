@@ -48,7 +48,7 @@ namespace AskIt
     #endregion
 		
 		public DataBaseClassDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_9BD928_AskItConnectionString"].ConnectionString, mappingSource)
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_9BD928_AskItConnectionString1"].ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}

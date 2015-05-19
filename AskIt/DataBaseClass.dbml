@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_9BD928_AskIt" Class="DataBaseClassDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=SQL5012.Smarterasp.net;Initial Catalog=DB_9BD928_AskIt;User ID=DB_9BD928_AskIt_admin" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="DB_9BD928_AskItConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="WebSettings" ConnectionString="Data Source=SQL5012.Smarterasp.net;Initial Catalog=DB_9BD928_AskIt;Persist Security Info=True;User ID=DB_9BD928_AskIt_admin" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="DB_9BD928_AskItConnectionString1" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Archieve" Member="Archieve">
     <Type Name="Archieve">
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />

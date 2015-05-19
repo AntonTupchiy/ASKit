@@ -49,9 +49,8 @@ namespace AskIt.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "Login")]
+        public string Login { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -67,6 +66,8 @@ namespace AskIt.Models
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
+        [RegularExpression(@"^([0-9a-zA-Z]([\+\-_\.][0-9a-zA-Z]+)*)+@(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]*\.)+[a-zA-Z0-9]{2,3})$",
+            ErrorMessage = "Please provide valid email id")]
         public string Email { get; set; }
 
         [Required]
@@ -79,6 +80,22 @@ namespace AskIt.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "Please provide username", AllowEmptyStrings = false)]
+        [Display(Name = "Login")]
+        public string Login { get; set; }
+
+        [Required(ErrorMessage = "Please provide full name", AllowEmptyStrings = false)]
+        [Display(Name = "Name")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Please provide Surname", AllowEmptyStrings = false)]
+        [Display(Name = "Surname")]
+        public string Surname { get; set; }
+
+        [Required(ErrorMessage = "Please provide knowledge", AllowEmptyStrings = false)]
+        [Display(Name = "Knowledge")]
+        public string Knowledge { get; set; }
     }
 
     public class ResetPasswordViewModel

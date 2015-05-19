@@ -22,7 +22,7 @@ namespace AskIt.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +34,9 @@ namespace AskIt.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -72,23 +72,40 @@ namespace AskIt.Controllers
             {
                 return View(model);
             }
-
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
+            using (DataBaseClassDataContext dbdc = new DataBaseClassDataContext())
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                var user =
+                    (from q in dbdc.Users
+                     where q.Login.Equals(model.Login) && q.Password.Equals(model.Password)
+                     select new
+                     {
+                         q.Login,
+                         q.Password
+                     }).FirstOrDefault();
+                if (user != null)
+                {
+                    var result = await SignInManager.PasswordSignInAsync(user.Login, user.Password, model.RememberMe, shouldLockout: false);
+                    switch (result)
+                    {
+                        case SignInStatus.Success:
+                            return RedirectToAction("Index", "Manage");
+                        case SignInStatus.LockedOut:
+                            return View("Lockout");
+                        case SignInStatus.RequiresVerification:
+                            return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                        case SignInStatus.Failure:
+                        default:
+                            ModelState.AddModelError("", "Invalid login attempt.");
+                            return View(model);
+                    }
+                }
+                ModelState.AddModelError("", "Invalid login attempt.");
+                return View(model);
+
             }
+
+
+            //return View(model);
         }
 
         //
@@ -120,7 +137,7 @@ namespace AskIt.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -145,42 +162,29 @@ namespace AskIt.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        //[AllowAnonymous]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                using (DataBaseClassDataContext dc = new DataBaseClassDataContext()) {
-                    //you should check duplicate registration here 
-                    var query =
-                        (from q in dc.Users
-                         where q.Login == model.Email
-                         select q).First();
-                    query.Surname = model.Email;
-                    
-                    dc.Users.InsertOnSubmit(query);
-                    dc.SubmitChanges();
-                    
-                    ModelState.Clear();
-                    model = null;
-                    ViewBag.Message = "Successfully Registration Done";
-                }
-                //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                //var result = await UserManager.CreateAsync(user, model.Password);
-                //if (result.Succeeded)
-                //{
-                //    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                //    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                //    // Send an email with this link
-                //    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                //    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                //    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    using (DataBaseClassDataContext dc = new DataBaseClassDataContext())
+                    {
+                        Users tbUsers = new Users();
+                        tbUsers.Login = model.Login;
+                        tbUsers.Name = model.Name;
+                        tbUsers.Surname = model.Surname;
+                        tbUsers.Password = model.Password;
+                        tbUsers.E_Mail = model.Email;
+                        tbUsers.Knowledge = model.Knowledge;
+                        var user = new ApplicationUser { UserName = tbUsers.Login, Email = tbUsers.E_Mail };
+                        var result = await UserManager.CreateAsync(user, tbUsers.Password);
+                        dc.Users.InsertOnSubmit(tbUsers);
+                        dc.SubmitChanges();
 
-                //    return RedirectToAction("Index", "Home");
-                //}
-                //AddErrors(result);
+                        ModelState.Clear();
+                        return RedirectToAction("Login", "Account");
+                    }
             }
 
             // If we got this far, something failed, redisplay form
