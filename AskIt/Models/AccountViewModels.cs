@@ -61,6 +61,14 @@ namespace AskIt.Models
         public bool RememberMe { get; set; }
     }
 
+    public class MessageViewModel
+    {
+        [Required]
+        [Display(Name = "Login")]
+        public string Login { get; set; }
+
+    }
+
     public class RegisterViewModel
     {
         [Required]
