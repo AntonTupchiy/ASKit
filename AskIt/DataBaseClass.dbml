@@ -58,4 +58,11 @@
       <Association Name="Users_Room" Member="Room" ThisKey="ID" OtherKey="AuthorID" Type="Room" />
     </Type>
   </Table>
+  <Table Name="dbo.Knowledge" Member="Knowledge">
+    <Type Name="Knowledge">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Area" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="Tags" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
 </Database>

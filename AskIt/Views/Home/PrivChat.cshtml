@@ -1,0 +1,42 @@
+﻿@model SignalR_Mvc4.Infrastructure.User
+<div id="private-@Model.ConnectionId" class="private-chat-container">
+    <div class="private-chat-header">
+        Priv with
+        @Model.UserName
+        <button type="button" class="close" onclick="removeElement('#private-@Model.ConnectionId')">
+            <span class="glyphicon glyphicon-remove-circle"></span>
+        </button>
+    </div>
+    <div class="private-discussion-container">
+        <ul id="private-discussion" class="list-group"></ul>
+    </div>
+    <div id="private-message-@Model.ConnectionId" data-connectionid="@Model.ConnectionId" class="input-group input-group-sm private-message-box">
+        <input type="text" id="private-message" placeholder="Write your message..." class="form-control" />
+        <span class="input-group-btn">
+            <button type="button" id="private-sendmessage" class="btn btn-primary btn-sm">Send</button>
+        </span>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#private-message').focus();
+
+        $('#private-message').keypress(function (e) {
+            if (e.keyCode == 13) {
+                var connectionId = $(this).parent().data('connectionid');
+                console.log(connectionId);
+                sendMessage(connectionId);
+            }
+        });
+        $('#private-sendmessage').click(function () {
+            var connectionId = $(this).parent().data('connectionid');
+            sendMessage(connectionId);
+        });
+
+        function sendMessage(connectionId) {
+            console.log(connectionId);
+            chat.server.send($('#private-message').val(), connectionId);
+            $('#private-message').val('').focus();
+        }
+    });
+</script>

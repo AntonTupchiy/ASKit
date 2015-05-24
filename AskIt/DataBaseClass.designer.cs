@@ -45,6 +45,9 @@ namespace AskIt
     partial void InsertUsers(Users instance);
     partial void UpdateUsers(Users instance);
     partial void DeleteUsers(Users instance);
+    partial void InsertKnowledge(Knowledge instance);
+    partial void UpdateKnowledge(Knowledge instance);
+    partial void DeleteKnowledge(Knowledge instance);
     #endregion
 		
 		public DataBaseClassDataContext() : 
@@ -114,6 +117,14 @@ namespace AskIt
 			get
 			{
 				return this.GetTable<Users>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Knowledge> Knowledge
+		{
+			get
+			{
+				return this.GetTable<Knowledge>();
 			}
 		}
 	}
@@ -1364,6 +1375,116 @@ namespace AskIt
 		{
 			this.SendPropertyChanging();
 			entity.Users = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Knowledge")]
+	public partial class Knowledge : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _Area;
+		
+		private string _Tags;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnAreaChanging(string value);
+    partial void OnAreaChanged();
+    partial void OnTagsChanging(string value);
+    partial void OnTagsChanged();
+    #endregion
+		
+		public Knowledge()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Area", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string Area
+		{
+			get
+			{
+				return this._Area;
+			}
+			set
+			{
+				if ((this._Area != value))
+				{
+					this.OnAreaChanging(value);
+					this.SendPropertyChanging();
+					this._Area = value;
+					this.SendPropertyChanged("Area");
+					this.OnAreaChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Tags", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string Tags
+		{
+			get
+			{
+				return this._Tags;
+			}
+			set
+			{
+				if ((this._Tags != value))
+				{
+					this.OnTagsChanging(value);
+					this.SendPropertyChanging();
+					this._Tags = value;
+					this.SendPropertyChanged("Tags");
+					this.OnTagsChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }
