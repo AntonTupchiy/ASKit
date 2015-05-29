@@ -1,111 +1,86 @@
 ﻿@{
-    ViewBag.Title = "Chat";
+    ViewBag.Title = "Chat, Chat, Chat...";
 }
 
-<h2>Чат-комната</h2>
+@section head {
 
-<div class="main">
-    <div id="chatBody">
-        <div id="header"></div>
-        <div id="inputForm">
-            <input type="text" id="message" />
-            <input type="button" id="sendmessage" value="Отправить" />
-        </div>
-        <div id="chatroom">
-            <ul></ul>
-        </div>
+    <style type="text/css">
+        ul {
+            margin: 0;
+        }
 
-        <div id="chatusers">
-            <p><strong>Все пользователи</strong></p>
-            <ul></ul>
-        </div>
-    </div>
-    <input id="hdId" type="hidden" />
-    <input id="username" type="hidden" />
-</div>
+            ul li {
+                padding: 0;
+                list-style-type: none;
+            }
+
+        #messages {
+            margin-top: 10px;
+        }
+
+            #messages li {
+                background-color: #EEE;
+                -webkit-border-radius: 3px;
+                -moz-border-radius: 3px;
+                border-radius: 3px;
+                min-height: 40px;
+                line-height: 40px;
+                padding-left: 7px;
+                padding-right: 7px;
+                margin-bottom: 1px;
+            }
+
+        #users li {
+            border: 1px solid #EEE;
+            padding: 4px;
+            border-radius: 3px;
+            margin-bottom: 1px;
+            cursor: pointer;
+        }
+
+        .privateChatUser {
+            background-color: #3A87AD;
+        }
+    </style>
+}
+
 @section scripts {
-    <!--Ссылка на библиотеку SignalR -->
     <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
-    <!--Ссылка на автоматически сгенерированный скрипт хаба SignalR -->
     <script src="~/signalr/hubs"></script>
-    <script>
-        $(function () {
-
-            //$('#loginBlock').show();
-            //$('#chatBody').hide();
-            // Ссылка на автоматически-сгенерированный прокси хаба
-            var chat = $.connection.chatHub;
-            // Объявление функции, которая хаб вызывает при получении сообщений
-            chat.client.addMessage = function (name, message) {
-                // Добавление сообщений на веб-страницу
-                $('#chatroom ul').append('<li><strong>' + htmlEncode(name)
-                    + '</strong>: ' + htmlEncode(message) + '</li>');
-            };
-
-            // Функция, вызываемая при подключении нового пользователя
-            chat.client.onConnected = function (id, userName, allUsers) {
-
-                //$('#loginBlock').hide();
-                $('#chatBody').show();
-                // установка в скрытых полях имени и id текущего пользователя
-                $('#hdId').val(id);
-                $('#username').val(userName);
-                $('#header').html('<h3>Добро пожаловать, ' + userName + '</h3>');
-
-                // Добавление всех пользователей
-                for (i = 0; i < allUsers.length; i++) {
-
-                    AddUser(allUsers[i].ConnectionId, allUsers[i].Name);
-                }
-            }
-
-            // Добавляем нового пользователя
-            chat.client.onNewUserConnected = function (id, name) {
-
-                AddUser(id, name);
-            }
-
-            // Удаляем пользователя
-            chat.client.onUserDisconnected = function (id, userName) {
-
-                $('#' + id).remove();
-            }
-
-            // Открываем соединение
-            $.connection.hub.start().done(function () {
-
-                $('#sendmessage').click(function () {
-                    // Вызываем у хаба метод Send
-                    chat.server.send($('#username').val(), $('#message').val());
-                    $('#message').val('');
-                });
-
-                // обработка логина
-                $("#btnLogin").click(function () {
-
-                    var name = $("#txtUserName").val();
-                    if (name.length > 0) {
-                        chat.server.connect(name);
-                    }
-                    else {
-                        alert("Введите имя");
-                    }
-                });
-            });
-        });
-        // Кодирование тегов
-        function htmlEncode(value) {
-            var encodedValue = $('<div />').text(value).html();
-            return encodedValue;
-        }
-        //Добавление нового пользователя
-        function AddUser(id, name) {
-
-            var userId = $('#hdId').val();
-            if (userId != id) {
-
-                $("#chatusers ul").append('<li id="' + id + '" class="user" >' + name + '</li>');
-            }
-        }
-    </script>
+    <script src="~/Scripts/apps/chat.js"></script>
 }
+
+<h2>Chat, Chat, Chat...</h2>
+
+<div class="alert alert-success">
+    Hello @User.Identity.Name! Start chating...
+</div>
+
+<div data-bind="visible: isInPrivateChat" class="alert alert-info">
+    You are in a private chat with @@<span data-bind="text: privateChatUser"></span>! <a href="#" data-bind="click: exitFromPrivateChat">Exit from private chat?</a>
+</div>
+
+<div class="col-md-12">
+    <div class="form-search">
+        <input type="text" id="txtMsg" class="input-xxlarge" disabled="disabled" placeholder="s" />
+        <button type="button" id="btnSend" class="btn btn-info" disabled="disabled">Send</button>
+    </div>
+</div>
+<div class="col-md-10">
+    <ul id="messages" data-bind="foreach: messages">
+        <li>
+            <span class="label label-danger" data-bind="visible: isPrivate">Private</span>
+            <strong><span data-bind="text: from"></span>: </strong>
+            <span data-bind="text: message"></span>
+        </li>
+    </ul>
+</div>
+<div class="col-md-2">
+    <div id="users" class="span2">
+        <ul data-bind="foreach: users">
+            <li data-bind="click: setAsPrivateChat, css: { privateChatUser: isPrivateChatUser }">
+                <span data-bind="text: name"></span>
+            </li>
+        </ul>
+    </div>
+</div>

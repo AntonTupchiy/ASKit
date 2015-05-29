@@ -8,6 +8,6 @@ namespace AskIt.Models
     public class ChatUser
     {
         public string userLogin { get; set; }
-        public string connectionId { get; set; }
+        public HashSet<string> ConnectionIds { get; set; }
     }
 }

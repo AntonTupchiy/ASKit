@@ -22,7 +22,7 @@ namespace AskIt
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_9BD928_AskIt")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_9CA56F_AskIT")]
 	public partial class DataBaseClassDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -33,9 +33,9 @@ namespace AskIt
     partial void InsertArchieve(Archieve instance);
     partial void UpdateArchieve(Archieve instance);
     partial void DeleteArchieve(Archieve instance);
-    partial void InsertInvites(Invites instance);
-    partial void UpdateInvites(Invites instance);
-    partial void DeleteInvites(Invites instance);
+    partial void InsertKnowledge(Knowledge instance);
+    partial void UpdateKnowledge(Knowledge instance);
+    partial void DeleteKnowledge(Knowledge instance);
     partial void InsertMessages(Messages instance);
     partial void UpdateMessages(Messages instance);
     partial void DeleteMessages(Messages instance);
@@ -45,13 +45,10 @@ namespace AskIt
     partial void InsertUsers(Users instance);
     partial void UpdateUsers(Users instance);
     partial void DeleteUsers(Users instance);
-    partial void InsertKnowledge(Knowledge instance);
-    partial void UpdateKnowledge(Knowledge instance);
-    partial void DeleteKnowledge(Knowledge instance);
     #endregion
 		
 		public DataBaseClassDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_9BD928_AskItConnectionString1"].ConnectionString, mappingSource)
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_9CA56F_AskITConnectionString"].ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -88,11 +85,11 @@ namespace AskIt
 			}
 		}
 		
-		public System.Data.Linq.Table<Invites> Invites
+		public System.Data.Linq.Table<Knowledge> Knowledge
 		{
 			get
 			{
-				return this.GetTable<Invites>();
+				return this.GetTable<Knowledge>();
 			}
 		}
 		
@@ -117,14 +114,6 @@ namespace AskIt
 			get
 			{
 				return this.GetTable<Users>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Knowledge> Knowledge
-		{
-			get
-			{
-				return this.GetTable<Knowledge>();
 			}
 		}
 	}
@@ -172,7 +161,7 @@ namespace AskIt
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
 		public int ID
 		{
 			get
@@ -369,19 +358,17 @@ namespace AskIt
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Invites")]
-	public partial class Invites : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Knowledge")]
+	public partial class Knowledge : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private int _ID;
 		
-		private int _UserID;
+		private string _Area;
 		
-		private int _RoomID;
-		
-		private EntityRef<Room> _Room;
+		private int _AreaID;
 		
 		private EntityRef<Users> _Users;
 		
@@ -391,20 +378,19 @@ namespace AskIt
     partial void OnCreated();
     partial void OnIDChanging(int value);
     partial void OnIDChanged();
-    partial void OnUserIDChanging(int value);
-    partial void OnUserIDChanged();
-    partial void OnRoomIDChanging(int value);
-    partial void OnRoomIDChanged();
+    partial void OnAreaChanging(string value);
+    partial void OnAreaChanged();
+    partial void OnAreaIDChanging(int value);
+    partial void OnAreaIDChanged();
     #endregion
 		
-		public Invites()
+		public Knowledge()
 		{
-			this._Room = default(EntityRef<Room>);
 			this._Users = default(EntityRef<Users>);
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
 		public int ID
 		{
 			get
@@ -424,89 +410,51 @@ namespace AskIt
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserID", DbType="Int NOT NULL")]
-		public int UserID
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Area", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string Area
 		{
 			get
 			{
-				return this._UserID;
+				return this._Area;
 			}
 			set
 			{
-				if ((this._UserID != value))
+				if ((this._Area != value))
+				{
+					this.OnAreaChanging(value);
+					this.SendPropertyChanging();
+					this._Area = value;
+					this.SendPropertyChanged("Area");
+					this.OnAreaChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AreaID", DbType="Int NOT NULL")]
+		public int AreaID
+		{
+			get
+			{
+				return this._AreaID;
+			}
+			set
+			{
+				if ((this._AreaID != value))
 				{
 					if (this._Users.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
-					this.OnUserIDChanging(value);
+					this.OnAreaIDChanging(value);
 					this.SendPropertyChanging();
-					this._UserID = value;
-					this.SendPropertyChanged("UserID");
-					this.OnUserIDChanged();
+					this._AreaID = value;
+					this.SendPropertyChanged("AreaID");
+					this.OnAreaIDChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RoomID", AutoSync=AutoSync.Always, DbType="Int NOT NULL IDENTITY", IsDbGenerated=true)]
-		public int RoomID
-		{
-			get
-			{
-				return this._RoomID;
-			}
-			set
-			{
-				if ((this._RoomID != value))
-				{
-					if (this._Room.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnRoomIDChanging(value);
-					this.SendPropertyChanging();
-					this._RoomID = value;
-					this.SendPropertyChanged("RoomID");
-					this.OnRoomIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Room_Invites", Storage="_Room", ThisKey="RoomID", OtherKey="ID", IsForeignKey=true)]
-		public Room Room
-		{
-			get
-			{
-				return this._Room.Entity;
-			}
-			set
-			{
-				Room previousValue = this._Room.Entity;
-				if (((previousValue != value) 
-							|| (this._Room.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Room.Entity = null;
-						previousValue.Invites.Remove(this);
-					}
-					this._Room.Entity = value;
-					if ((value != null))
-					{
-						value.Invites.Add(this);
-						this._RoomID = value.ID;
-					}
-					else
-					{
-						this._RoomID = default(int);
-					}
-					this.SendPropertyChanged("Room");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Invites", Storage="_Users", ThisKey="UserID", OtherKey="ID", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Knowledge", Storage="_Users", ThisKey="AreaID", OtherKey="ID", IsForeignKey=true)]
 		public Users Users
 		{
 			get
@@ -523,17 +471,17 @@ namespace AskIt
 					if ((previousValue != null))
 					{
 						this._Users.Entity = null;
-						previousValue.Invites.Remove(this);
+						previousValue.Knowledge1.Remove(this);
 					}
 					this._Users.Entity = value;
 					if ((value != null))
 					{
-						value.Invites.Add(this);
-						this._UserID = value.ID;
+						value.Knowledge1.Add(this);
+						this._AreaID = value.ID;
 					}
 					else
 					{
-						this._UserID = default(int);
+						this._AreaID = default(int);
 					}
 					this.SendPropertyChanged("Users");
 				}
@@ -575,8 +523,6 @@ namespace AskIt
 		
 		private string _Time;
 		
-		private int _MessageID;
-		
 		private EntityRef<Room> _Room;
 		
 		private EntityRef<Users> _Users;
@@ -593,8 +539,6 @@ namespace AskIt
     partial void OnTextChanged();
     partial void OnTimeChanging(string value);
     partial void OnTimeChanged();
-    partial void OnMessageIDChanging(int value);
-    partial void OnMessageIDChanged();
     #endregion
 		
 		public Messages()
@@ -604,7 +548,7 @@ namespace AskIt
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RoomID", DbType="Int NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RoomID", DbType="Int NOT NULL", IsPrimaryKey=true)]
 		public int RoomID
 		{
 			get
@@ -692,26 +636,6 @@ namespace AskIt
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MessageID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int MessageID
-		{
-			get
-			{
-				return this._MessageID;
-			}
-			set
-			{
-				if ((this._MessageID != value))
-				{
-					this.OnMessageIDChanging(value);
-					this.SendPropertyChanging();
-					this._MessageID = value;
-					this.SendPropertyChanged("MessageID");
-					this.OnMessageIDChanged();
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Room_Messages", Storage="_Room", ThisKey="RoomID", OtherKey="ID", IsForeignKey=true)]
 		public Room Room
 		{
@@ -729,12 +653,12 @@ namespace AskIt
 					if ((previousValue != null))
 					{
 						this._Room.Entity = null;
-						previousValue.Messages.Remove(this);
+						previousValue.Messages = null;
 					}
 					this._Room.Entity = value;
 					if ((value != null))
 					{
-						value.Messages.Add(this);
+						value.Messages = this;
 						this._RoomID = value.ID;
 					}
 					else
@@ -815,9 +739,7 @@ namespace AskIt
 		
 		private string _Question;
 		
-		private EntitySet<Invites> _Invites;
-		
-		private EntitySet<Messages> _Messages;
+		private EntityRef<Messages> _Messages;
 		
 		private EntityRef<Users> _Users;
 		
@@ -837,13 +759,12 @@ namespace AskIt
 		
 		public Room()
 		{
-			this._Invites = new EntitySet<Invites>(new Action<Invites>(this.attach_Invites), new Action<Invites>(this.detach_Invites));
-			this._Messages = new EntitySet<Messages>(new Action<Messages>(this.attach_Messages), new Action<Messages>(this.detach_Messages));
+			this._Messages = default(EntityRef<Messages>);
 			this._Users = default(EntityRef<Users>);
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
 		public int ID
 		{
 			get
@@ -927,29 +848,32 @@ namespace AskIt
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Room_Invites", Storage="_Invites", ThisKey="ID", OtherKey="RoomID")]
-		public EntitySet<Invites> Invites
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Room_Messages", Storage="_Messages", ThisKey="ID", OtherKey="RoomID", IsUnique=true, IsForeignKey=false)]
+		public Messages Messages
 		{
 			get
 			{
-				return this._Invites;
+				return this._Messages.Entity;
 			}
 			set
 			{
-				this._Invites.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Room_Messages", Storage="_Messages", ThisKey="ID", OtherKey="RoomID")]
-		public EntitySet<Messages> Messages
-		{
-			get
-			{
-				return this._Messages;
-			}
-			set
-			{
-				this._Messages.Assign(value);
+				Messages previousValue = this._Messages.Entity;
+				if (((previousValue != value) 
+							|| (this._Messages.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Messages.Entity = null;
+						previousValue.Room = null;
+					}
+					this._Messages.Entity = value;
+					if ((value != null))
+					{
+						value.Room = this;
+					}
+					this.SendPropertyChanged("Messages");
+				}
 			}
 		}
 		
@@ -1006,30 +930,6 @@ namespace AskIt
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_Invites(Invites entity)
-		{
-			this.SendPropertyChanging();
-			entity.Room = this;
-		}
-		
-		private void detach_Invites(Invites entity)
-		{
-			this.SendPropertyChanging();
-			entity.Room = null;
-		}
-		
-		private void attach_Messages(Messages entity)
-		{
-			this.SendPropertyChanging();
-			entity.Room = this;
-		}
-		
-		private void detach_Messages(Messages entity)
-		{
-			this.SendPropertyChanging();
-			entity.Room = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Users")]
@@ -1056,7 +956,7 @@ namespace AskIt
 		
 		private EntitySet<Archieve> _Archieve1;
 		
-		private EntitySet<Invites> _Invites;
+		private EntitySet<Knowledge> _Knowledge1;
 		
 		private EntitySet<Messages> _Messages;
 		
@@ -1086,13 +986,13 @@ namespace AskIt
 		{
 			this._Archieve = new EntitySet<Archieve>(new Action<Archieve>(this.attach_Archieve), new Action<Archieve>(this.detach_Archieve));
 			this._Archieve1 = new EntitySet<Archieve>(new Action<Archieve>(this.attach_Archieve1), new Action<Archieve>(this.detach_Archieve1));
-			this._Invites = new EntitySet<Invites>(new Action<Invites>(this.attach_Invites), new Action<Invites>(this.detach_Invites));
+			this._Knowledge1 = new EntitySet<Knowledge>(new Action<Knowledge>(this.attach_Knowledge1), new Action<Knowledge>(this.detach_Knowledge1));
 			this._Messages = new EntitySet<Messages>(new Action<Messages>(this.attach_Messages), new Action<Messages>(this.detach_Messages));
 			this._Room = new EntitySet<Room>(new Action<Room>(this.attach_Room), new Action<Room>(this.detach_Room));
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
 		public int ID
 		{
 			get
@@ -1258,16 +1158,16 @@ namespace AskIt
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Invites", Storage="_Invites", ThisKey="ID", OtherKey="UserID")]
-		public EntitySet<Invites> Invites
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Knowledge", Storage="_Knowledge1", ThisKey="ID", OtherKey="AreaID")]
+		public EntitySet<Knowledge> Knowledge1
 		{
 			get
 			{
-				return this._Invites;
+				return this._Knowledge1;
 			}
 			set
 			{
-				this._Invites.Assign(value);
+				this._Knowledge1.Assign(value);
 			}
 		}
 		
@@ -1341,13 +1241,13 @@ namespace AskIt
 			entity.Users1 = null;
 		}
 		
-		private void attach_Invites(Invites entity)
+		private void attach_Knowledge1(Knowledge entity)
 		{
 			this.SendPropertyChanging();
 			entity.Users = this;
 		}
 		
-		private void detach_Invites(Invites entity)
+		private void detach_Knowledge1(Knowledge entity)
 		{
 			this.SendPropertyChanging();
 			entity.Users = null;
@@ -1375,116 +1275,6 @@ namespace AskIt
 		{
 			this.SendPropertyChanging();
 			entity.Users = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Knowledge")]
-	public partial class Knowledge : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _id;
-		
-		private string _Area;
-		
-		private string _Tags;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnidChanging(int value);
-    partial void OnidChanged();
-    partial void OnAreaChanging(string value);
-    partial void OnAreaChanged();
-    partial void OnTagsChanging(string value);
-    partial void OnTagsChanged();
-    #endregion
-		
-		public Knowledge()
-		{
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id
-		{
-			get
-			{
-				return this._id;
-			}
-			set
-			{
-				if ((this._id != value))
-				{
-					this.OnidChanging(value);
-					this.SendPropertyChanging();
-					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Area", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string Area
-		{
-			get
-			{
-				return this._Area;
-			}
-			set
-			{
-				if ((this._Area != value))
-				{
-					this.OnAreaChanging(value);
-					this.SendPropertyChanging();
-					this._Area = value;
-					this.SendPropertyChanged("Area");
-					this.OnAreaChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Tags", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string Tags
-		{
-			get
-			{
-				return this._Tags;
-			}
-			set
-			{
-				if ((this._Tags != value))
-				{
-					this.OnTagsChanging(value);
-					this.SendPropertyChanging();
-					this._Tags = value;
-					this.SendPropertyChanged("Tags");
-					this.OnTagsChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
 		}
 	}
 }

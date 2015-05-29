@@ -1,8 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_9BD928_AskIt" Class="DataBaseClassDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=SQL5012.Smarterasp.net;Initial Catalog=DB_9BD928_AskIt;Persist Security Info=True;User ID=DB_9BD928_AskIt_admin" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="DB_9BD928_AskItConnectionString1" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_9CA56F_AskIT" Class="DataBaseClassDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=SQL5012.Smarterasp.net;Initial Catalog=DB_9CA56F_AskIT;Persist Security Info=True;User ID=DB_9CA56F_AskIT_admin" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="DB_9CA56F_AskITConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Archieve" Member="Archieve">
     <Type Name="Archieve">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Question" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="AuthorID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Answer" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
@@ -11,40 +11,37 @@
       <Association Name="Users_Archieve1" Member="Users1" ThisKey="AuthorID" OtherKey="ID" Type="Users" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Invites" Member="Invites">
-    <Type Name="Invites">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="UserID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="RoomID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
-      <Association Name="Room_Invites" Member="Room" ThisKey="RoomID" OtherKey="ID" Type="Room" IsForeignKey="true" />
-      <Association Name="Users_Invites" Member="Users" ThisKey="UserID" OtherKey="ID" Type="Users" IsForeignKey="true" />
+  <Table Name="dbo.Knowledge" Member="Knowledge">
+    <Type Name="Knowledge">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Area" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="AreaID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Users_Knowledge" Member="Users" ThisKey="AreaID" OtherKey="ID" Type="Users" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Messages" Member="Messages">
     <Type Name="Messages">
-      <Column Name="RoomID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RoomID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="AuthorID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Text" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="Time" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="MessageID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Association Name="Room_Messages" Member="Room" ThisKey="RoomID" OtherKey="ID" Type="Room" IsForeignKey="true" />
       <Association Name="Users_Messages" Member="Users" ThisKey="AuthorID" OtherKey="ID" Type="Users" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Room" Member="Room">
     <Type Name="Room">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="AuthorID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Time" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
       <Column Name="Question" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="Room_Invites" Member="Invites" ThisKey="ID" OtherKey="RoomID" Type="Invites" />
-      <Association Name="Room_Messages" Member="Messages" ThisKey="ID" OtherKey="RoomID" Type="Messages" />
+      <Association Name="Room_Messages" Member="Messages" ThisKey="ID" OtherKey="RoomID" Type="Messages" Cardinality="One" />
       <Association Name="Users_Room" Member="Users" ThisKey="AuthorID" OtherKey="ID" Type="Users" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Users" Member="Users">
     <Type Name="Users">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Login" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="Surname" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
@@ -53,16 +50,9 @@
       <Column Name="Knowledge" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Association Name="Users_Archieve" Member="Archieve" ThisKey="ID" OtherKey="AnswerID" Type="Archieve" />
       <Association Name="Users_Archieve1" Member="Archieve1" ThisKey="ID" OtherKey="AuthorID" Type="Archieve" />
-      <Association Name="Users_Invites" Member="Invites" ThisKey="ID" OtherKey="UserID" Type="Invites" />
+      <Association Name="Users_Knowledge" Member="Knowledge1" ThisKey="ID" OtherKey="AreaID" Type="Knowledge" />
       <Association Name="Users_Messages" Member="Messages" ThisKey="ID" OtherKey="AuthorID" Type="Messages" />
       <Association Name="Users_Room" Member="Room" ThisKey="ID" OtherKey="AuthorID" Type="Room" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Knowledge" Member="Knowledge">
-    <Type Name="Knowledge">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Area" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="Tags" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
 </Database>
