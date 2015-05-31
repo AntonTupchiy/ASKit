@@ -177,11 +177,10 @@ namespace AskIt.Controllers
                         tbUsers.Password = model.Password;
                         tbUsers.E_Mail = model.Email;
                         tbUsers.Knowledge = model.Knowledge;
-                        var user = new ApplicationUser { UserName = tbUsers.Login, Email = tbUsers.E_Mail };
-                        var result = await UserManager.CreateAsync(user, tbUsers.Password);
                         dc.Users.InsertOnSubmit(tbUsers);
                         dc.SubmitChanges();
-
+                        var user = new ApplicationUser { UserName = tbUsers.Login, Email = tbUsers.E_Mail };
+                        var result = await UserManager.CreateAsync(user, tbUsers.Password);
                         ModelState.Clear();
                         return RedirectToAction("Login", "Account");
                     }
