@@ -30,15 +30,9 @@ namespace AskIt
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertArchieve(Archieve instance);
-    partial void UpdateArchieve(Archieve instance);
-    partial void DeleteArchieve(Archieve instance);
-    partial void InsertKnowledge(Knowledge instance);
-    partial void UpdateKnowledge(Knowledge instance);
-    partial void DeleteKnowledge(Knowledge instance);
-    partial void InsertMessages(Messages instance);
-    partial void UpdateMessages(Messages instance);
-    partial void DeleteMessages(Messages instance);
+    partial void InsertArea(Area instance);
+    partial void UpdateArea(Area instance);
+    partial void DeleteArea(Area instance);
     partial void InsertRoom(Room instance);
     partial void UpdateRoom(Room instance);
     partial void DeleteRoom(Room instance);
@@ -77,27 +71,11 @@ namespace AskIt
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<Archieve> Archieve
+		public System.Data.Linq.Table<Area> Area
 		{
 			get
 			{
-				return this.GetTable<Archieve>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Knowledge> Knowledge
-		{
-			get
-			{
-				return this.GetTable<Knowledge>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Messages> Messages
-		{
-			get
-			{
-				return this.GetTable<Messages>();
+				return this.GetTable<Area>();
 			}
 		}
 		
@@ -109,6 +87,14 @@ namespace AskIt
 			}
 		}
 		
+		public System.Data.Linq.Table<RoomToID> RoomToID
+		{
+			get
+			{
+				return this.GetTable<RoomToID>();
+			}
+		}
+		
 		public System.Data.Linq.Table<Users> Users
 		{
 			get
@@ -116,27 +102,27 @@ namespace AskIt
 				return this.GetTable<Users>();
 			}
 		}
+		
+		public System.Data.Linq.Table<UserToArea> UserToArea
+		{
+			get
+			{
+				return this.GetTable<UserToArea>();
+			}
+		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Archieve")]
-	public partial class Archieve : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Area")]
+	public partial class Area : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private int _ID;
 		
-		private string _Question;
+		private string _AreaName;
 		
-		private int _AuthorID;
-		
-		private string _Answer;
-		
-		private int _AnswerID;
-		
-		private EntityRef<Users> _Users;
-		
-		private EntityRef<Users> _Users1;
+		private string _Tags;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -144,20 +130,14 @@ namespace AskIt
     partial void OnCreated();
     partial void OnIDChanging(int value);
     partial void OnIDChanged();
-    partial void OnQuestionChanging(string value);
-    partial void OnQuestionChanged();
-    partial void OnAuthorIDChanging(int value);
-    partial void OnAuthorIDChanged();
-    partial void OnAnswerChanging(string value);
-    partial void OnAnswerChanged();
-    partial void OnAnswerIDChanging(int value);
-    partial void OnAnswerIDChanged();
+    partial void OnAreaNameChanging(string value);
+    partial void OnAreaNameChanged();
+    partial void OnTagsChanging(string value);
+    partial void OnTagsChanged();
     #endregion
 		
-		public Archieve()
+		public Area()
 		{
-			this._Users = default(EntityRef<Users>);
-			this._Users1 = default(EntityRef<Users>);
 			OnCreated();
 		}
 		
@@ -181,525 +161,42 @@ namespace AskIt
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Question", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string Question
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AreaName", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string AreaName
 		{
 			get
 			{
-				return this._Question;
+				return this._AreaName;
 			}
 			set
 			{
-				if ((this._Question != value))
+				if ((this._AreaName != value))
 				{
-					this.OnQuestionChanging(value);
+					this.OnAreaNameChanging(value);
 					this.SendPropertyChanging();
-					this._Question = value;
-					this.SendPropertyChanged("Question");
-					this.OnQuestionChanged();
+					this._AreaName = value;
+					this.SendPropertyChanged("AreaName");
+					this.OnAreaNameChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AuthorID", DbType="Int NOT NULL")]
-		public int AuthorID
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Tags", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string Tags
 		{
 			get
 			{
-				return this._AuthorID;
+				return this._Tags;
 			}
 			set
 			{
-				if ((this._AuthorID != value))
+				if ((this._Tags != value))
 				{
-					if (this._Users1.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnAuthorIDChanging(value);
+					this.OnTagsChanging(value);
 					this.SendPropertyChanging();
-					this._AuthorID = value;
-					this.SendPropertyChanged("AuthorID");
-					this.OnAuthorIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Answer", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string Answer
-		{
-			get
-			{
-				return this._Answer;
-			}
-			set
-			{
-				if ((this._Answer != value))
-				{
-					this.OnAnswerChanging(value);
-					this.SendPropertyChanging();
-					this._Answer = value;
-					this.SendPropertyChanged("Answer");
-					this.OnAnswerChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AnswerID", DbType="Int NOT NULL")]
-		public int AnswerID
-		{
-			get
-			{
-				return this._AnswerID;
-			}
-			set
-			{
-				if ((this._AnswerID != value))
-				{
-					if (this._Users.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnAnswerIDChanging(value);
-					this.SendPropertyChanging();
-					this._AnswerID = value;
-					this.SendPropertyChanged("AnswerID");
-					this.OnAnswerIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Archieve", Storage="_Users", ThisKey="AnswerID", OtherKey="ID", IsForeignKey=true)]
-		public Users Users
-		{
-			get
-			{
-				return this._Users.Entity;
-			}
-			set
-			{
-				Users previousValue = this._Users.Entity;
-				if (((previousValue != value) 
-							|| (this._Users.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Users.Entity = null;
-						previousValue.Archieve.Remove(this);
-					}
-					this._Users.Entity = value;
-					if ((value != null))
-					{
-						value.Archieve.Add(this);
-						this._AnswerID = value.ID;
-					}
-					else
-					{
-						this._AnswerID = default(int);
-					}
-					this.SendPropertyChanged("Users");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Archieve1", Storage="_Users1", ThisKey="AuthorID", OtherKey="ID", IsForeignKey=true)]
-		public Users Users1
-		{
-			get
-			{
-				return this._Users1.Entity;
-			}
-			set
-			{
-				Users previousValue = this._Users1.Entity;
-				if (((previousValue != value) 
-							|| (this._Users1.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Users1.Entity = null;
-						previousValue.Archieve1.Remove(this);
-					}
-					this._Users1.Entity = value;
-					if ((value != null))
-					{
-						value.Archieve1.Add(this);
-						this._AuthorID = value.ID;
-					}
-					else
-					{
-						this._AuthorID = default(int);
-					}
-					this.SendPropertyChanged("Users1");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Knowledge")]
-	public partial class Knowledge : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ID;
-		
-		private string _Area;
-		
-		private int _AreaID;
-		
-		private EntityRef<Users> _Users;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIDChanging(int value);
-    partial void OnIDChanged();
-    partial void OnAreaChanging(string value);
-    partial void OnAreaChanged();
-    partial void OnAreaIDChanging(int value);
-    partial void OnAreaIDChanged();
-    #endregion
-		
-		public Knowledge()
-		{
-			this._Users = default(EntityRef<Users>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ID
-		{
-			get
-			{
-				return this._ID;
-			}
-			set
-			{
-				if ((this._ID != value))
-				{
-					this.OnIDChanging(value);
-					this.SendPropertyChanging();
-					this._ID = value;
-					this.SendPropertyChanged("ID");
-					this.OnIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Area", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string Area
-		{
-			get
-			{
-				return this._Area;
-			}
-			set
-			{
-				if ((this._Area != value))
-				{
-					this.OnAreaChanging(value);
-					this.SendPropertyChanging();
-					this._Area = value;
-					this.SendPropertyChanged("Area");
-					this.OnAreaChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AreaID", DbType="Int NOT NULL")]
-		public int AreaID
-		{
-			get
-			{
-				return this._AreaID;
-			}
-			set
-			{
-				if ((this._AreaID != value))
-				{
-					if (this._Users.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnAreaIDChanging(value);
-					this.SendPropertyChanging();
-					this._AreaID = value;
-					this.SendPropertyChanged("AreaID");
-					this.OnAreaIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Knowledge", Storage="_Users", ThisKey="AreaID", OtherKey="ID", IsForeignKey=true)]
-		public Users Users
-		{
-			get
-			{
-				return this._Users.Entity;
-			}
-			set
-			{
-				Users previousValue = this._Users.Entity;
-				if (((previousValue != value) 
-							|| (this._Users.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Users.Entity = null;
-						previousValue.Knowledge1.Remove(this);
-					}
-					this._Users.Entity = value;
-					if ((value != null))
-					{
-						value.Knowledge1.Add(this);
-						this._AreaID = value.ID;
-					}
-					else
-					{
-						this._AreaID = default(int);
-					}
-					this.SendPropertyChanged("Users");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Messages")]
-	public partial class Messages : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _RoomID;
-		
-		private int _AuthorID;
-		
-		private string _Text;
-		
-		private string _Time;
-		
-		private EntityRef<Room> _Room;
-		
-		private EntityRef<Users> _Users;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnRoomIDChanging(int value);
-    partial void OnRoomIDChanged();
-    partial void OnAuthorIDChanging(int value);
-    partial void OnAuthorIDChanged();
-    partial void OnTextChanging(string value);
-    partial void OnTextChanged();
-    partial void OnTimeChanging(string value);
-    partial void OnTimeChanged();
-    #endregion
-		
-		public Messages()
-		{
-			this._Room = default(EntityRef<Room>);
-			this._Users = default(EntityRef<Users>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RoomID", DbType="Int NOT NULL", IsPrimaryKey=true)]
-		public int RoomID
-		{
-			get
-			{
-				return this._RoomID;
-			}
-			set
-			{
-				if ((this._RoomID != value))
-				{
-					if (this._Room.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnRoomIDChanging(value);
-					this.SendPropertyChanging();
-					this._RoomID = value;
-					this.SendPropertyChanged("RoomID");
-					this.OnRoomIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AuthorID", DbType="Int NOT NULL")]
-		public int AuthorID
-		{
-			get
-			{
-				return this._AuthorID;
-			}
-			set
-			{
-				if ((this._AuthorID != value))
-				{
-					if (this._Users.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnAuthorIDChanging(value);
-					this.SendPropertyChanging();
-					this._AuthorID = value;
-					this.SendPropertyChanged("AuthorID");
-					this.OnAuthorIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Text", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string Text
-		{
-			get
-			{
-				return this._Text;
-			}
-			set
-			{
-				if ((this._Text != value))
-				{
-					this.OnTextChanging(value);
-					this.SendPropertyChanging();
-					this._Text = value;
-					this.SendPropertyChanged("Text");
-					this.OnTextChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Time", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string Time
-		{
-			get
-			{
-				return this._Time;
-			}
-			set
-			{
-				if ((this._Time != value))
-				{
-					this.OnTimeChanging(value);
-					this.SendPropertyChanging();
-					this._Time = value;
-					this.SendPropertyChanged("Time");
-					this.OnTimeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Room_Messages", Storage="_Room", ThisKey="RoomID", OtherKey="ID", IsForeignKey=true)]
-		public Room Room
-		{
-			get
-			{
-				return this._Room.Entity;
-			}
-			set
-			{
-				Room previousValue = this._Room.Entity;
-				if (((previousValue != value) 
-							|| (this._Room.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Room.Entity = null;
-						previousValue.Messages = null;
-					}
-					this._Room.Entity = value;
-					if ((value != null))
-					{
-						value.Messages = this;
-						this._RoomID = value.ID;
-					}
-					else
-					{
-						this._RoomID = default(int);
-					}
-					this.SendPropertyChanged("Room");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Messages", Storage="_Users", ThisKey="AuthorID", OtherKey="ID", IsForeignKey=true)]
-		public Users Users
-		{
-			get
-			{
-				return this._Users.Entity;
-			}
-			set
-			{
-				Users previousValue = this._Users.Entity;
-				if (((previousValue != value) 
-							|| (this._Users.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Users.Entity = null;
-						previousValue.Messages.Remove(this);
-					}
-					this._Users.Entity = value;
-					if ((value != null))
-					{
-						value.Messages.Add(this);
-						this._AuthorID = value.ID;
-					}
-					else
-					{
-						this._AuthorID = default(int);
-					}
-					this.SendPropertyChanged("Users");
+					this._Tags = value;
+					this.SendPropertyChanged("Tags");
+					this.OnTagsChanged();
 				}
 			}
 		}
@@ -731,15 +228,13 @@ namespace AskIt
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
-		private int _ID;
-		
 		private int _AuthorID;
 		
-		private System.DateTime _Time;
+		private string _Message;
 		
-		private string _Question;
+		private string _Name;
 		
-		private EntityRef<Messages> _Messages;
+		private int _ID;
 		
 		private EntityRef<Users> _Users;
 		
@@ -747,41 +242,20 @@ namespace AskIt
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void OnIDChanging(int value);
-    partial void OnIDChanged();
     partial void OnAuthorIDChanging(int value);
     partial void OnAuthorIDChanged();
-    partial void OnTimeChanging(System.DateTime value);
-    partial void OnTimeChanged();
-    partial void OnQuestionChanging(string value);
-    partial void OnQuestionChanged();
+    partial void OnMessageChanging(string value);
+    partial void OnMessageChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnIDChanging(int value);
+    partial void OnIDChanged();
     #endregion
 		
 		public Room()
 		{
-			this._Messages = default(EntityRef<Messages>);
 			this._Users = default(EntityRef<Users>);
 			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
-		public int ID
-		{
-			get
-			{
-				return this._ID;
-			}
-			set
-			{
-				if ((this._ID != value))
-				{
-					this.OnIDChanging(value);
-					this.SendPropertyChanging();
-					this._ID = value;
-					this.SendPropertyChanged("ID");
-					this.OnIDChanged();
-				}
-			}
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AuthorID", DbType="Int NOT NULL")]
@@ -808,71 +282,62 @@ namespace AskIt
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Time", DbType="Date NOT NULL")]
-		public System.DateTime Time
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Message", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string Message
 		{
 			get
 			{
-				return this._Time;
+				return this._Message;
 			}
 			set
 			{
-				if ((this._Time != value))
+				if ((this._Message != value))
 				{
-					this.OnTimeChanging(value);
+					this.OnMessageChanging(value);
 					this.SendPropertyChanging();
-					this._Time = value;
-					this.SendPropertyChanged("Time");
-					this.OnTimeChanged();
+					this._Message = value;
+					this.SendPropertyChanged("Message");
+					this.OnMessageChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Question", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string Question
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string Name
 		{
 			get
 			{
-				return this._Question;
+				return this._Name;
 			}
 			set
 			{
-				if ((this._Question != value))
+				if ((this._Name != value))
 				{
-					this.OnQuestionChanging(value);
+					this.OnNameChanging(value);
 					this.SendPropertyChanging();
-					this._Question = value;
-					this.SendPropertyChanged("Question");
-					this.OnQuestionChanged();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Room_Messages", Storage="_Messages", ThisKey="ID", OtherKey="RoomID", IsUnique=true, IsForeignKey=false)]
-		public Messages Messages
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ID
 		{
 			get
 			{
-				return this._Messages.Entity;
+				return this._ID;
 			}
 			set
 			{
-				Messages previousValue = this._Messages.Entity;
-				if (((previousValue != value) 
-							|| (this._Messages.HasLoadedOrAssignedValue == false)))
+				if ((this._ID != value))
 				{
+					this.OnIDChanging(value);
 					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Messages.Entity = null;
-						previousValue.Room = null;
-					}
-					this._Messages.Entity = value;
-					if ((value != null))
-					{
-						value.Room = this;
-					}
-					this.SendPropertyChanged("Messages");
+					this._ID = value;
+					this.SendPropertyChanged("ID");
+					this.OnIDChanged();
 				}
 			}
 		}
@@ -932,6 +397,51 @@ namespace AskIt
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.RoomToID")]
+	public partial class RoomToID
+	{
+		
+		private int _userID;
+		
+		private int _roomID;
+		
+		public RoomToID()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_userID", DbType="Int NOT NULL")]
+		public int userID
+		{
+			get
+			{
+				return this._userID;
+			}
+			set
+			{
+				if ((this._userID != value))
+				{
+					this._userID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_roomID", DbType="Int NOT NULL")]
+		public int roomID
+		{
+			get
+			{
+				return this._roomID;
+			}
+			set
+			{
+				if ((this._roomID != value))
+				{
+					this._roomID = value;
+				}
+			}
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Users")]
 	public partial class Users : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -951,14 +461,6 @@ namespace AskIt
 		private string _Password;
 		
 		private string _Knowledge;
-		
-		private EntitySet<Archieve> _Archieve;
-		
-		private EntitySet<Archieve> _Archieve1;
-		
-		private EntitySet<Knowledge> _Knowledge1;
-		
-		private EntitySet<Messages> _Messages;
 		
 		private EntitySet<Room> _Room;
 		
@@ -984,10 +486,6 @@ namespace AskIt
 		
 		public Users()
 		{
-			this._Archieve = new EntitySet<Archieve>(new Action<Archieve>(this.attach_Archieve), new Action<Archieve>(this.detach_Archieve));
-			this._Archieve1 = new EntitySet<Archieve>(new Action<Archieve>(this.attach_Archieve1), new Action<Archieve>(this.detach_Archieve1));
-			this._Knowledge1 = new EntitySet<Knowledge>(new Action<Knowledge>(this.attach_Knowledge1), new Action<Knowledge>(this.detach_Knowledge1));
-			this._Messages = new EntitySet<Messages>(new Action<Messages>(this.attach_Messages), new Action<Messages>(this.detach_Messages));
 			this._Room = new EntitySet<Room>(new Action<Room>(this.attach_Room), new Action<Room>(this.detach_Room));
 			OnCreated();
 		}
@@ -1132,58 +630,6 @@ namespace AskIt
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Archieve", Storage="_Archieve", ThisKey="ID", OtherKey="AnswerID")]
-		public EntitySet<Archieve> Archieve
-		{
-			get
-			{
-				return this._Archieve;
-			}
-			set
-			{
-				this._Archieve.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Archieve1", Storage="_Archieve1", ThisKey="ID", OtherKey="AuthorID")]
-		public EntitySet<Archieve> Archieve1
-		{
-			get
-			{
-				return this._Archieve1;
-			}
-			set
-			{
-				this._Archieve1.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Knowledge", Storage="_Knowledge1", ThisKey="ID", OtherKey="AreaID")]
-		public EntitySet<Knowledge> Knowledge1
-		{
-			get
-			{
-				return this._Knowledge1;
-			}
-			set
-			{
-				this._Knowledge1.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Messages", Storage="_Messages", ThisKey="ID", OtherKey="AuthorID")]
-		public EntitySet<Messages> Messages
-		{
-			get
-			{
-				return this._Messages;
-			}
-			set
-			{
-				this._Messages.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Users_Room", Storage="_Room", ThisKey="ID", OtherKey="AuthorID")]
 		public EntitySet<Room> Room
 		{
@@ -1217,54 +663,6 @@ namespace AskIt
 			}
 		}
 		
-		private void attach_Archieve(Archieve entity)
-		{
-			this.SendPropertyChanging();
-			entity.Users = this;
-		}
-		
-		private void detach_Archieve(Archieve entity)
-		{
-			this.SendPropertyChanging();
-			entity.Users = null;
-		}
-		
-		private void attach_Archieve1(Archieve entity)
-		{
-			this.SendPropertyChanging();
-			entity.Users1 = this;
-		}
-		
-		private void detach_Archieve1(Archieve entity)
-		{
-			this.SendPropertyChanging();
-			entity.Users1 = null;
-		}
-		
-		private void attach_Knowledge1(Knowledge entity)
-		{
-			this.SendPropertyChanging();
-			entity.Users = this;
-		}
-		
-		private void detach_Knowledge1(Knowledge entity)
-		{
-			this.SendPropertyChanging();
-			entity.Users = null;
-		}
-		
-		private void attach_Messages(Messages entity)
-		{
-			this.SendPropertyChanging();
-			entity.Users = this;
-		}
-		
-		private void detach_Messages(Messages entity)
-		{
-			this.SendPropertyChanging();
-			entity.Users = null;
-		}
-		
 		private void attach_Room(Room entity)
 		{
 			this.SendPropertyChanging();
@@ -1275,6 +673,51 @@ namespace AskIt
 		{
 			this.SendPropertyChanging();
 			entity.Users = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.UserToArea")]
+	public partial class UserToArea
+	{
+		
+		private int _userID;
+		
+		private int _areaID;
+		
+		public UserToArea()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_userID", DbType="Int NOT NULL")]
+		public int userID
+		{
+			get
+			{
+				return this._userID;
+			}
+			set
+			{
+				if ((this._userID != value))
+				{
+					this._userID = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_areaID", DbType="Int NOT NULL")]
+		public int areaID
+		{
+			get
+			{
+				return this._areaID;
+			}
+			set
+			{
+				if ((this._areaID != value))
+				{
+					this._areaID = value;
+				}
+			}
 		}
 	}
 }

@@ -18,6 +18,8 @@ namespace AskIt.Models
 
         }
 
+        public string inputGroups { get; set; }
+
         public List<string> chatGroup { get; set; }
         public string CurrentGroup { get; set; }
 

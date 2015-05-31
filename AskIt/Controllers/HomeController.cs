@@ -11,7 +11,8 @@ namespace AskIt.Controllers
     {
         public ActionResult Index(ChatUser model)
         {
-            return View();
+            model.chatGroup.Add(model.inputGroups);
+            return View(model);
         }
 
         public ActionResult About()
