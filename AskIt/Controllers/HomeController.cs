@@ -4,15 +4,27 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AskIt.Models;
+using System.Threading.Tasks;
 
 namespace AskIt.Controllers
 {
     public class HomeController : Controller
     {
+        
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public ActionResult Index(ChatUser model)
         {
-            //model.chatGroup.Add(model.inputGroups);
-            return View();
+            if (ModelState.IsValid)
+            {
+                string inp = model.inputGroups.ToString();
+                model.chatGroup.Add(inp);
+            }
+            return View(model);
         }
 
         public ActionResult About()

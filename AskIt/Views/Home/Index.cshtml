@@ -1,14 +1,16 @@
-﻿@using AskIt.Models
-@model ChatUser
-
+﻿@model AskIt.Models.ChatUser
 @{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "AskIT";
 }
 
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
 <div class="row">
     <div class="col-xs-4">
         @Html.TextBoxFor(m => m.inputGroups)
         <input type="submit" value="GO" class="btn btn-default" />
     </div>
 </div>
-
+}
