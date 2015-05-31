@@ -7,6 +7,6 @@ namespace AskIt.Models
 {
     public class ChatRooms
     {
-        public List<string> chatGroup { get; set; }
+
     }
 }

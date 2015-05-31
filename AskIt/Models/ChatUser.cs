@@ -7,6 +7,20 @@ namespace AskIt.Models
 {
     public class ChatUser
     {
+        public ChatUser(string group)
+        {
+            CurrentGroup = group;
+        }
+
+        public ChatUser()
+            : this("Lobby")
+        {
+
+        }
+
+        public List<string> chatGroup { get; set; }
+        public string CurrentGroup { get; set; }
+
         public string userLogin { get; set; }
         public HashSet<string> ConnectionIds { get; set; }
     }

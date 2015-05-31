@@ -57,6 +57,8 @@ namespace AskIt.Hubs
         //    return base.OnDisconnected(stopCalled);
         //}
 
+        private static readonly List<ChatUser> ConnectedUsers = new List<ChatUser>();
+
         private static readonly ConcurrentDictionary<string, ChatUser> chatUsers
             = new ConcurrentDictionary<string, ChatUser>(StringComparer.InvariantCultureIgnoreCase);
 
@@ -95,6 +97,17 @@ namespace AskIt.Hubs
             }
         }
 
+        public void SendMessage(string message)
+        {
+            var user = GetUser(Context.User.Identity.Name);
+            SendGroupMessage(user, message);
+        }
+
+        private void SendGroupMessage(ChatUser user, string message)
+        {
+            Clients.Group(user.CurrentGroup).addMessage(user.userLogin, message);
+        }
+
         public IEnumerable<string> GetConnectedUsers()
         {
 
@@ -127,6 +140,20 @@ namespace AskIt.Hubs
 
                 user.ConnectionIds.Add(connectionId);
 
+                //Add to default group
+                //await 
+                //Groups.Add(user.ConnectionIds, user.CurrentGroup);
+                string connectionGrpToString = user.ConnectionIds.ToString();
+
+                Groups.Add(connectionGrpToString, user.CurrentGroup);
+
+                UpdateGroupUserList(user.CurrentGroup);
+
+                var message = string.Format("{0} has joined.", user.userLogin);
+                SendGroupAlert(user, message);
+
+                var personalMessage = string.Format("You have joined {0} as {1}.", user.CurrentGroup, user.userLogin);
+                SendPersonalAlert(personalMessage);
                 // // broadcast this to all clients other than the caller
                 // Clients.AllExcept(user.ConnectionIds.ToArray()).userConnected(userName);
 
@@ -140,6 +167,49 @@ namespace AskIt.Hubs
             }
 
             return base.OnConnected();
+        }
+
+        public void JoinGroup(string groupName)
+        {
+            var user = GetUser(Context.User.Identity.Name);
+            //ChatUser group;
+            string connectionGrpToString = user.ConnectionIds.ToString();
+            //if (!group.chatGroup.Contains(groupName))
+            //{
+            //    SendPersonalAlert("No group exists by that name");
+            //    return;
+            //}
+            if (user.CurrentGroup.Equals(groupName))
+            {
+                SendPersonalAlert("You are already a member of that group");
+                return;
+            }
+
+            //Remove from current group
+            var oldGroup = user.CurrentGroup;
+
+            //Tell everyone user is leaving
+            var message = string.Format("{0} has left.", user.userLogin);
+            SendGroupAlert(user, message);
+
+            //remove user from the group
+            //await 
+            Groups.Remove(connectionGrpToString, oldGroup);
+
+            //Join new Group
+            user.CurrentGroup = groupName;
+            //await 
+            Groups.Add(connectionGrpToString, user.CurrentGroup);
+
+            //Update the user lists for the old and new group
+            UpdateGroupUserList(oldGroup);
+            UpdateGroupUserList(user.CurrentGroup);
+
+            message = string.Format("{0} has joined.", user.userLogin);
+            SendGroupAlert(user, message);
+
+            message = string.Format("You have joined {0}", user.CurrentGroup);
+            SendPersonalAlert(message);
         }
 
         public override Task OnDisconnected(bool stopCalled)
@@ -165,6 +235,12 @@ namespace AskIt.Hubs
                         ChatUser removedUser;
                         chatUsers.TryRemove(userName, out removedUser);
 
+                        UpdateGroupUserList(user.CurrentGroup);
+
+                        //Alert that user left
+                        var message = string.Format("{0} has left.", user.userLogin);
+                        SendGroupAlert(user, message);
+
                         // You might want to only broadcast this info if this 
                         // is the last connection of the user and the user actual is 
                         // now disconnected from all connections.
@@ -183,6 +259,28 @@ namespace AskIt.Hubs
             chatUsers.TryGetValue(username, out user);
 
             return user;
+        }
+
+        private List<ChatUser> GetUsersByGroup(string groupName)
+        {
+            return ConnectedUsers.Where(x => x.CurrentGroup == groupName).ToList();
+        }
+
+        private void UpdateGroupUserList(string group)
+        {
+            var users = GetUsersByGroup(group);
+            Clients.Group(group).refreshUserList(users);
+        }
+
+        private void SendGroupAlert(ChatUser user, string message)
+        {
+            string connectionGrpToString = user.ConnectionIds.ToString();
+            Clients.Group(user.CurrentGroup, connectionGrpToString).systemAlert(message);
+        }
+
+        private void SendPersonalAlert(string message)
+        {
+            Clients.Caller.systemAlert(message);
         }
     }
 }
