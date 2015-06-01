@@ -11,32 +11,28 @@ namespace AskIt.Controllers
 {
     public class HomeController : Controller
     {
-        
+
         public ActionResult Index()
         {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult Index(ChatUser model)
         {
             if (ModelState.IsValid)
             {
-                string inputString = model.inputGroups.ToString();
-                model.chatGroup.Add(inputString);
-  
+                addRoom(model);
             }
-
             return View(model);
         }
 
-
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            return View(getRooms());
         }
+
 
         public ActionResult Contact()
         {
@@ -49,6 +45,17 @@ namespace AskIt.Controllers
         public ActionResult Chat()
         {
             return View();
+        }
+
+        public List<Room> getRooms()
+        {
+            using (DataBaseClassDataContext dc = new DataBaseClassDataContext())
+            {
+                var query =
+                    (from q in dc.Room
+                     select q).ToList();
+                return query;
+            }
         }
 
         #region Help Functions
@@ -90,6 +97,28 @@ namespace AskIt.Controllers
             .Key;
 
             return mainArea;
+        }
+
+        private void addRoom(ChatUser model)
+        {
+            using (DataBaseClassDataContext dc = new DataBaseClassDataContext())
+            {
+                Room room = new Room();
+                model.chatGroup = new List<string>(); // initialize collection
+                model.chatGroup.Add(model.nameOfGroup);
+                var query = (
+                    from u in dc.Users
+                    from r in dc.Room
+                    select new
+                    {
+                        u.ID
+                    }).FirstOrDefault();
+                model.authorID = query.ID;
+                room.AuthorID = model.authorID;
+                room.Name = model.nameOfGroup;
+                dc.Room.InsertOnSubmit(room);
+                dc.SubmitChanges();
+            }
         }
 
         #endregion
